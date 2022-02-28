@@ -1,10 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { ChallengesContext } from '../context/ChallengesContext';
 import styles from '../styles/components/CountDown.module.css'
+
+let countDownTimeOut: NodeJS.Timeout; //para cancelar o timeOut
 
 
 export function CountDown() {
-    const [ time, setTime ] = useState(25 * 60)
-    const [ active, setActive ] = useState(false)// para iniciar com desabilitado o conometro
+    const { startNewChallenge } = useContext(ChallengesContext)
+
+
+    const [ time, setTime ] = useState(0.1 * 60)
+    const [ isActive, setIsActive ] = useState(false)// para iniciar com desabilitado o conometro
+    const [ timeFineshed, setTimeFineshed] = useState(false)
 
     const minutos = Math.floor(time / 60);
     const segundos = (time % 60); // '%' resto da divisão
@@ -16,14 +23,25 @@ export function CountDown() {
     // split('') = ele vai pera a string por exemplo '25' e repartir em dois '2' e '5'. split devolve um array com primeiro e segundo caractere
 
     function startCoutDown() {
-        setActive(true);
+        setIsActive(true);
+    }
+
+    function CancelCoutDown() {
+        clearTimeout(countDownTimeOut)
+        setIsActive(false);
+        setTime((0.1 * 60))
     }
 
     useEffect(() => {
-        if (active && time > 0) {
-            setTimeout(() => {setTime(time - 1);}, 1000)
+        if (isActive && time > 0) {
+            countDownTimeOut = setTimeout(() => {setTime(time - 1);}, 1000)
+        } else if (isActive && time === 0) {
+            setTimeFineshed(true)
+            setIsActive(false);
+            startNewChallenge()
+
         }
-    }, [active, time]);
+    }, [isActive, time]);
 
     // setTimeout(() => {setTime(time - 1);}, 1000) = setTimeout = depois de 1000ms execute uma função; setTime recebe o valor de time -1.ou seja ele mudar para -1 a cada 1s e se add o time no useEffect sempre que o time mudar ele tira mais 1 segundo
     return(
@@ -40,13 +58,40 @@ export function CountDown() {
             </div>
         </div>
 
-        <button
-        type="button"
-        className={styles.CountdownButton}
-        onClick={startCoutDown}
-        >
-            Iniciar um ciclo
-        </button>
+        {timeFineshed ? (
+            <button
+            disabled
+            className={`${styles.CountdownButton} ${styles.CountdownButtonFinished}`}
+            >
+                Cliclo encerrado
+            </button>
+        ) : (
+            <>
+                { isActive ? (
+                    <button
+                    type="button"
+                    className={`${styles.CountdownButton} ${styles.CountdownButtonActive} `}
+                    onClick={CancelCoutDown}
+                    >
+                        Abondonar ciclo
+                    </button>
+                ) : (
+                    <button
+                        type="button"
+                        className={styles.CountdownButton}
+                        onClick={startCoutDown}
+                     >
+                        Iniciar ciclo
+                    </button>
+                )}
+            </>
+        )}
+
+        
+
+        
+
+        
         </div>
     )
 }

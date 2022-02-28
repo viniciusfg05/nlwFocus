@@ -1,0 +1,5 @@
+.ChallegesBoxContainer {
+  height: 100%;
+  background: var(--white);
+  border-radius: 5px;
+}

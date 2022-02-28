@@ -1,0 +1,33 @@
+.ChallegesBoxContainer {
+  height: 100%;
+  background: var(--white);
+  border-radius: 5px;
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.ChallegesBoxNotActive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ChallegesBoxNotActive strong {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.4rem;
+}
+
+.ChallegesBoxNotActive p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.4rem;
+  max-width: 70%;
+  margin-top: 3rem;
+}
